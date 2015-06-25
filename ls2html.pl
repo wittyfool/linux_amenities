@@ -22,7 +22,7 @@ _HTML
 print "[$dir]\n";
 for $f (@files){
   next if ($f =~ /^\./);
-  print qq|<a href=$dir/$f"> $f </a>\n|;
+  print qq|<a href="$dir/$f"> $f </a>\n|;
 }
 
 print <<_HTML;
