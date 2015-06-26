@@ -1,5 +1,7 @@
 #!/usr/bin/perl
-$dir = shift // '.';
+$dir = shift || do {
+  $dir = '.';
+};
 
 if(opendir(DIR, $dir)){
   @files = readdir(DIR);
