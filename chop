@@ -1,0 +1,4 @@
+#!/usr/bin/perl
+$_ = <>;
+s/[\r\n]//;
+print $_;
