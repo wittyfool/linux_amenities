@@ -1,0 +1,78 @@
+#include <stdio.h>
+#include "gd.h"
+#include "gdfonts.h"
+
+int blueValue=80;
+int blueMode=0;
+int x1,x2,y1,y2;
+char *infile=0, *outfile=0;
+/*** adjust contrast of gif image ***/
+/*** map index value from x1-x2 to y1-y2 ***/
+
+indexMap(int *c){
+  static int map[256],i=0;
+  int y;
+
+  if(*c<0)   return 1;
+  if(*c>255) return 1;
+  if(i==0){
+    for(i=0; i<256; i++){
+      y = (y2-y1)*(i-x1)/(x2-x1)+y1;
+      y = (y<0)?0:y;
+      y = (y>255)?255:y;
+      map[i] = y;
+    }
+  }
+  (*c) = map[*c];
+  return 0;
+}
+
+main(int argc, char *argv[]){
+  FILE *fp;
+  gdImagePtr im;
+  int fg,bg;
+  int i,j,x,y,c;
+  char *caption;
+
+  if(argc<4){
+    fprintf(stderr, "[%s] compiled [%s/%s at %s]\n", argv[0], __DATE__, __TIME__, DIRE);
+    fprintf(stderr, "Usage : %s in-gif out-gif caption\n", argv[0]);
+    exit(1);
+  }
+
+  infile  = argv[1];
+  outfile = argv[2];
+  caption = argv[3];
+
+  fp = fopen(infile, "rb");
+  if(!fp){
+    fprintf(stderr, "Can't open [%s]\n", infile);
+    exit(1);
+  }
+  im = gdImageCreateFromGif(fp);
+  fclose(fp);
+
+  if((fg = gdImageColorAllocate(im, 0,0,0))<0){
+    fg = gdImageColorClosest(im, 0,0,0);
+  }
+  if((bg = gdImageColorAllocate(im, 255,255,255))<0){
+    bg = gdImageColorClosest(im, 255,255,255);
+  }
+  for(i = -1; i<2; i++){
+    for(j = -1; j<2; j++){
+      gdImageString(im, gdFontSmall, 20+i, 20+j, caption, bg);
+    }
+  }
+  gdImageString(im, gdFontSmall, 20, 20, caption, fg);
+
+  fp = fopen(outfile, "wb");
+  if(!fp){
+    fprintf(stderr, "Can't open [%s]\n", outfile);
+    exit(1);
+  }
+
+  gdImageGif(im, fp);
+  fclose(fp);
+
+  gdImageDestroy(im);
+}
