@@ -1,6 +1,13 @@
+#! /usr/bin/perl -s
+
 #! /usr/bin/perl -w
-    eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
-        if 0; #$running_under_some_shell
+#    eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+#        if 0; #$running_under_some_shell
+
+
+my $arg = {
+  debug => $debug,
+};
 
 use strict;
 use File::Find ();
@@ -33,15 +40,19 @@ File::Find::find({wanted => \&wanted}, $dir1);
 $hash = $hash2;
 File::Find::find({wanted => \&wanted}, $dir2);
 
-#print Dumper $hash1;
-#print Dumper $hash2;
+print Dumper $hash1 if $arg->{debug};
+print Dumper $hash2 if $arg->{debug};
+
+my $kk;
 
 for my $k (sort keys %$hash1){
-  if( !defined($hash2->{$k})){
+  ($kk = $k ) =~ s/^$dir1/$dir2/;
+
+  if( !defined($hash2->{$kk})){
     print " [$k] not found in [$dir2]\n";
     next;
   }
-  if( $hash1->{ $k } ne $hash2->{ $k }){
+  if( $hash1->{ $k } ne $hash2->{ $kk }){
     print " [$k] differ \n";
   }
 }
@@ -55,17 +66,21 @@ sub wanted {
 
     (($dev,$ino,$mode,$nlink,$uid,$gid) = lstat($_)) &&
     do {
-    # print("$name\n");
+      print("wanted: $name\n") if($arg->{debug});
     #
-      $full = $start.'/'.$name;
+      if($name =~ /^\//){
+        $full = $name;
+      } else {
+        $full = $start.'/'.$name;
+      }
 
 	if( -f $full){
-          $sum = `sum $full`;
+          $sum = `sum $full 2>/dev/null`;
 	  $sum =~ s/[\r\n]//;
           $hash->{ $name } = $sum;
-	  #print "$name : $sum\n";
+	  #print "dir[$dir] name[$name] : sum[$sum]\n";
 	} else {
-	  #print "[$start][$name][$dir]\n";
+	  print "Not file?? [$start][$name][$dir]\n" if($arg->{debug});
         }
       ;
     };
