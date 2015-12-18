@@ -12,6 +12,11 @@
 #define LARGE	4
 #define GIANT	5
 
+#ifndef ORIGIN_X
+#define ORIGIN_X 20
+#define ORIGIN_Y 20
+#endif
+
 char *infile=0, *outfile=0;
 gdImagePtr im;
 gdFontPtr myFonts;

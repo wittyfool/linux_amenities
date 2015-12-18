@@ -21,6 +21,9 @@ gifadjust3 : gifadjust3.c
 gifcaption : gifcaption.c
 	gcc -I$(INCLUDE) -DDIRE=\"`pwd`\" gifcaption.c $(LIB) -lm -o gifcaption
 
+gifcaption55 : gifcaption.c
+	gcc -I$(INCLUDE) -DORIGIN_X=2 -DORIGIN_Y=2 -DDIRE=\"`pwd`\" gifcaption.c $(LIB) -lm -o gifcaption55
+
 gifscale : gifscale.c
 	gcc -I$(INCLUDE) -DDIRE=\"`pwd`\" gifscale.c $(LIB) -lm -o gifscale
 
