@@ -84,8 +84,10 @@ main(int argc, char *argv[]){
     bg = gdImageColorClosest(im, 255,255,255);
   }
 
-  x = 20;
-  y = 20;
+  // x = 20;
+  // y = 20;
+  x = ORIGIN_X;
+  y = ORIGIN_Y;
   for(i=3; i<argc; i++){
     int option=1;
     if(option && (argv[i][0] == '-')){
