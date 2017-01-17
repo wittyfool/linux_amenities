@@ -10,7 +10,7 @@ $h2 = toHash($f2);
 for $k (sort keys %$h2){
   $diff->{ $k } = $h2->{$k} - $h1->{$k};
 }
-for $k (sort keys %$h2){
+for $k (sort { $diff->{$a} <=> $diff->{$b} } keys %$diff){
   print $diff->{$k}."   ";
   print $k."     ".$h1->{$k}." --> ".$h2->{$k}."\n";
 }
