@@ -15,6 +15,8 @@ use strict;
 
 my $url = readUrl();
 
+die "url is empty..." unless($url =~ /./);
+
 my $text;
 while(<>){
   $text .= $_;
@@ -22,8 +24,7 @@ while(<>){
 
 my $json = qq/{ "channel": "#scsk", "text": "/.$text.qq/"}/;
 
-my $cmd  = qq/curl -s -X POST --data-urlencode /;
-$cmd .= qq/ 'payload=/.$json. qq/' /. $url;
+my $cmd  = qq/curl -s -X POST --data-urlencode 'payload=/.$json. qq/' /. $url;
 
 if($arg->{exec}){
   print `$cmd`;
@@ -39,7 +40,7 @@ sub readUrl {
   open(FP, $ENV{'HOME'}."/.slack") || die "Can't open ~/.slack";
   while(<FP>){
     next if(/^#/);
-    if(/(\w+):\s*(\S+)/){
+    if(/([\w\.]+):\s*(\S+)/){
       $urlHash->{ $1} = $2;
       push(@$urlArray, $2);
     }
