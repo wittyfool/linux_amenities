@@ -10,10 +10,17 @@ if(defined($key)){
 if(defined($exec)){
   $arg->{'exec'} = $exec;
 }
+if(defined($channel)){
+  $arg->{'channel'} = $channel;
+} else {
+  $arg->{'channel'} = 'scsk';
+}
+
 
 use strict;
 
 my $url = readUrl();
+my $channel = $arg->{'channel'};
 
 die "url is empty..." unless($url =~ /./);
 
@@ -22,8 +29,7 @@ while(<>){
   $text .= $_;
 }
 
-my $json = qq/{ "channel": "#scsk", "text": "/.$text.qq/"}/;
-
+my $json = qq/{ "channel": "#$channel", "text": "/.$text.qq/"}/;
 my $cmd  = qq/curl -s -X POST --data-urlencode 'payload=/.$json. qq/' /. $url;
 
 if($arg->{exec}){
