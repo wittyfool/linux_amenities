@@ -9,6 +9,7 @@ $f2 = shift || die;
 open($fp1, '<', $f1) || die;
 open($fp2, '<', $f2) || die;
 
+$near_cnt=0;
 $eq_cnt=0;
 $cnt=0;
 while(1){
@@ -19,10 +20,12 @@ while(1){
   $cnt++;
   if($x1 == $x2){
     $eq_cnt++;
-    # print "x1,x2=[$x1][$x2]\n";
+  } elsif(( $x1 == $x2+1) || ($x2 == $x1+1)){
+    $near_cnt++;
   }
 }
 
 $eq = int(($eq_cnt/ $cnt) * 100);
+$near = int((($eq_cnt+$near_cnt)/ $cnt) * 100);
 
-print "cnt=[$cnt] eq=[$eq_cnt]  $eq% equal    [$f1] [$f2]\n";
+print "cnt=[$cnt] eq=[$eq_cnt]  [$eq%]equal [$near%]nearEqual    $f1 $f2\n";
