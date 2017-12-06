@@ -7,6 +7,8 @@
 
 my $arg = {
   debug => $debug,
+  chop => $chop,	# chop cr/lf
+  ext => $ext,
 };
 
 use strict;
@@ -53,7 +55,7 @@ for my $k (sort keys %$hash1){
     next;
   }
   if( $hash1->{ $k } ne $hash2->{ $kk }){
-    print " [$k] differ \n";
+    print " [$k] differ [$hash1->{$k} <=> [$hash2->{$kk}]\n";
   }
 }
 
@@ -66,7 +68,6 @@ sub wanted {
 
     (($dev,$ino,$mode,$nlink,$uid,$gid) = lstat($_)) &&
     do {
-      print("wanted: $name\n") if($arg->{debug});
     #
       if($name =~ /^\//){
         $full = $name;
@@ -74,15 +75,34 @@ sub wanted {
         $full = $start.'/'.$name;
       }
 
+
 	if( -f $full){
-          $sum = `sum $full 2>/dev/null`;
+          if( $arg->{ ext} ){
+
+	    if($name =~ /\.$arg->{ext}$/ ){
+	      ;
+	    } else {
+	      # skip
+	      print "Skip... ext = ".$arg->{ext}." name=".$name."\n" if($arg->{debug});
+	      return 0;
+	    }
+	  }
+
+          #$sum = `sum $full 2>/dev/null`;
+	  my $fullEscape;
+	  ($fullEscape = $full) =~ s/(\s)/\\$1/g;
+	  $fullEscape =~ s/&/\\&/g;
+          $sum = `chop -loop $fullEscape | sum 2>/dev/null`;
 	  $sum =~ s/[\r\n]//;
           $hash->{ $name } = $sum;
 	  #print "dir[$dir] name[$name] : sum[$sum]\n";
+	} elsif( -d $full) {
+	  ;
 	} else {
 	  print "Not file?? [$start][$name][$dir]\n" if($arg->{debug});
         }
       ;
+      print("wanted: $name\n") if($arg->{debug});
     };
 }
 

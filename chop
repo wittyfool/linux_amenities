@@ -1,4 +1,13 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -s
+if($loop){
+  while(<>){
+    s/[\r\n]+//;
+    print $_;
+    print "\n";
+  }
+  exit 0;
+} 
+
 $_ = <>;
-s/[\r\n]//;
+s/[\r\n]+//;
 print $_;
