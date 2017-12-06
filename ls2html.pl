@@ -1,4 +1,7 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -s
+#
+# -image : ‰æ‘œ—p
+#
 $dir = shift || do {
   $dir = '.';
 };
@@ -22,9 +25,13 @@ print <<_HTML;
 _HTML
 
 print "[$dir]\n";
-for $f (@files){
+for $f (sort @files){
   next if ($f =~ /^\./);
-  print qq|<a href="$dir/$f"> $f </a>\n|;
+  if($image){
+    print qq|<img src="$dir/$f"> $dir/$f <br />\n|;
+  } else {
+    print qq|<a href="$dir/$f"> $f </a>\n|;
+  }
 }
 
 print <<_HTML;
