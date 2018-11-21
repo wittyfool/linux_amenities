@@ -1,0 +1,11 @@
+shelltitle "$ |x"
+term xterm-256color
+escape ^T^T
+defscrollback 1000
+caption always "%?%F%{= wk}%:%{= ww}%?%-w%{=u Wk}%n %t%{-}%+w"
+
+startup_message off
+autodetach on
+
+bind e encoding eucjp
+bind u encoding utf8
