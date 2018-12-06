@@ -18,18 +18,20 @@ const digit2 = function(d){
 // Google先生の不思議な時間フォーマット
 const dateStr = function(micro){
   let sec = parseInt(micro / 1000000, 10);
+  sec += 9*3600; // from UTC(GMT) to JST
+
   let days = parseInt(sec / 86400, 10);
   sec %= 86400;
   let hour = parseInt( sec / 3600);
   let min  = parseInt( (sec - hour * 3600) / 60);
 
-  let nd = new Date(1601, 1, 1);
+  let nd = new Date(1601, 0, 1);
   nd.setDate(nd.getDate() + days);
   nd.setHours(nd.getHours() + hour);
   nd.setMinutes(nd.getMinutes() + min);
 
   return nd.getFullYear() +'/' 
-	+ digit2(nd.getMonth())+'/'
+	+ digit2(nd.getMonth()+1)+'/'
 	+ digit2(nd.getDate()) 
 	+ ' ' + digit2(nd.getHours())
 	+ ':' + digit2(nd.getMinutes());
