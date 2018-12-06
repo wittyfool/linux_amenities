@@ -1,0 +1,5 @@
+export PS1='[\u@Macbook \W]\$ '
+export PATH=$HOME/.nodebrew/current/bin:$PATH
+export PATH=$HOME/bin:$PATH
+export HISTTIMEFORMAT='%m/%d %H:%M:%S '
+
