@@ -1,0 +1,42 @@
+"set fencs=cp932
+"set tabstop=4
+"
+syntax on
+
+hi SpecialKey ctermfg=darkmagenta
+
+" タブを表示
+"set list listchars=tab:¦_
+
+"--------------------------------------------------------------------------
+" neobundle
+set nocompatible               " Be iMproved
+filetype off                   " Required!
+
+if has('vim_starting')
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
+endif
+
+
+" NeoBundleを初期化
+call neobundle#begin(expand('~/.vim/bundle/'))
+
+" インストールするプラグインをここに記述
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/vimfiler'
+
+NeoBundle 'editorconfig/editorconfig-vim'
+
+call neobundle#end()
+
+" ファイルタイプ別のプラグイン/インデントを有効にする
+filetype plugin indent on
+
+" バックアップを有効にする
+set backup
+set backupdir=>~/vimbackup
+
+" バージョンを保存する
+set patchmode=.bak
+let savevers_types = "*"
+let savevers_dirs = &backupdir
