@@ -13,8 +13,8 @@ $room =~ s/[\r\n]+$//;
 $thread =~ s/[\r\n]+$//;
 $url .= "/spaces/$room/messages";
 #
-$cmd = "curl -s -m 5 -H 'Content-Type:application/json' -d \@- $url\\?key=$key\\&token=$token";
-$pipe  = "curl -s -m 5 -H 'Content-Type:application/json' -d \@- $url\\?key=$key\\&token=$token";
+$cmd = "curl -s -m 15 -H 'Content-Type:application/json' -d \@- $url\\?key=$key\\&token=$token";
+$pipe  = "curl -s -m 15 -H 'Content-Type:application/json' -d \@- $url\\?key=$key\\&token=$token";
 
 print $cmd;
 print "\n";
@@ -22,8 +22,18 @@ print "\n";
 while(<>){
 	s/[\r\n]+$//;
 	$msg .= $_;
-	#$msg .= "\\n";
+	$msg .= "\\n";
 };
+
+$msg =~ s/\n$//;
+
+$threadLine = <<_THREAD_LINE;
+ "thread": { "name": "spaces/$room/threads/$thread" }, 
+_THREAD_LINE
+
+if($nothread){
+  $threadLine = "";
+}
 
 if($exec){
 	$date = `date`;
@@ -31,7 +41,7 @@ if($exec){
 	open(PIPE, '|-', $pipe) || die;
 	print PIPE <<_PIPE;
 { 
- "thread": { "name": "spaces/$room/threads/$thread" }, 
+  $threadLine
  "text" : "$msg"
 }
 _PIPE
@@ -39,7 +49,7 @@ _PIPE
 } else {
 	print <<_PIPE;
 { 
- "thread": { "name": "spaces/$room/threads/$thread" }, 
+  $threadLine
  "text" : "$msg"
 }
 _PIPE
