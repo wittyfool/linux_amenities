@@ -1,7 +1,8 @@
 #!/usr/bin/perl -s
 #
+use JSON;
 
-$config = readConfig('postHangout.config');
+$config = readConfig('postHangout.config.json');
 
 $token = $config->{'token'};
 $key = $config->{'key'};
@@ -56,14 +57,12 @@ _PIPE
 
 sub readConfig  {
     my $f = shift;
-    my $conf = {};
-    open(my $fp, '<', $f) || die;
-    while(<$fp>){
-        if(/(\S+)\s+(\S+)/){
-            $conf->{$1} = $2;
-        }
-    }
+    open(my $fp, '<', $f) || die "Cannot open config file '$f': $!";
+    local $/;
+    my $text = <$fp>;
     close($fp);
 
+    my $conf = eval { decode_json($text) };
+    die "Failed to parse JSON config file '$f': $@" if $@;
     return $conf;
 }

@@ -1,0 +1,7 @@
+{
+  "token": "your_token_here",
+  "key": "your_key_here",
+  "room": "your_room_id_here",
+  "thread": "your_thread_id_here",
+  "url": "https://chat.googleapis.com/v1"
+}
